@@ -42,15 +42,12 @@ fn fs_main(in: VertexOutput) -> [[location(0)]] vec4<f32> {
 	var upper_r: vec3<f32> = (value_r - lower_r) / 16.0;
 	var alpha_r: vec3<f32> = (min(upper_r, vec3<f32>(1.0)) + min(lower_r, vec3<f32>(1.0))) / 2.0;
 
-	// return vec4<f32>(alpha_l, 0.0, 1.0);
-
 	// Average the energy over the pixels on either side
 	var rgb: vec3<f32> = vec3<f32>(
 		(alpha_l.y + alpha_l.x + alpha_r.z) / 3.0,
 		(alpha_l.x + alpha_r.z + alpha_r.y) / 3.0,
 		(alpha_r.z + alpha_r.y + alpha_r.x) / 3.0);
-	var a = (rgb.x + rgb.y + rgb.z) / 3.0;
-	return vec4<f32>(rgb / a, a);
+	return vec4<f32>(rgb, 1.0);
 
 	// return rgba;
 }

@@ -2,11 +2,12 @@ use crate::IntermediateBufs;
 use std::{borrow::Cow, mem::size_of};
 use wgpu::{
 	util::{BufferInitDescriptor, DeviceExt},
-	BindGroupLayout, BindGroupLayoutDescriptor, BindGroupLayoutEntry, BindingType, BlendState, Buffer, BufferAddress,
-	BufferBindingType, BufferSize, BufferUsages, ColorTargetState, ColorWrites, CommandBuffer, Device, FragmentState,
-	MultisampleState, PipelineLayoutDescriptor, PrimitiveState, RenderPipeline, RenderPipelineDescriptor,
-	ShaderModuleDescriptor, ShaderSource, ShaderStages, TextureFormat, TextureSampleType, TextureView,
-	TextureViewDimension, VertexAttribute, VertexBufferLayout, VertexFormat, VertexState, VertexStepMode,
+	BindGroupLayout, BindGroupLayoutDescriptor, BindGroupLayoutEntry, BindingType, BlendComponent, BlendFactor,
+	BlendOperation, BlendState, Buffer, BufferAddress, BufferBindingType, BufferSize, BufferUsages, ColorTargetState,
+	ColorWrites, CommandBuffer, Device, FragmentState, MultisampleState, PipelineLayoutDescriptor, PrimitiveState,
+	RenderPipeline, RenderPipelineDescriptor, ShaderModuleDescriptor, ShaderSource, ShaderStages, TextureFormat,
+	TextureSampleType, TextureView, TextureViewDimension, VertexAttribute, VertexBufferLayout, VertexFormat,
+	VertexState, VertexStepMode,
 };
 
 pub struct RasterizePipeline {
@@ -74,7 +75,14 @@ impl RasterizePipeline {
 				entry_point: "fs_main",
 				targets: &[ColorTargetState {
 					format: view_format,
-					blend: Some(BlendState::ALPHA_BLENDING),
+					blend: Some(BlendState {
+						color: BlendComponent {
+							src_factor: BlendFactor::OneMinusDst,
+							dst_factor: BlendFactor::One,
+							operation: BlendOperation::Add,
+						},
+						alpha: BlendComponent::REPLACE,
+					}),
 					write_mask: ColorWrites::ALL,
 				}],
 			}),

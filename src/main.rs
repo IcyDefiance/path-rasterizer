@@ -17,6 +17,7 @@ struct ErrorFuture<F> {
 }
 impl<F: Future<Output = Option<wgpu::Error>>> Future for ErrorFuture<F> {
 	type Output = ();
+
 	fn poll(self: Pin<&mut Self>, cx: &mut task::Context<'_>) -> task::Poll<()> {
 		let inner = unsafe { self.map_unchecked_mut(|me| &mut me.inner) };
 		inner.poll(cx).map(|error| {
@@ -61,7 +62,7 @@ impl framework::Example for Example {
 	}
 
 	fn update(&mut self, _event: winit::event::WindowEvent) {
-		//empty
+		// empty
 	}
 
 	fn resize(&mut self, _config: &wgpu::SurfaceConfiguration, _device: &wgpu::Device, _queue: &wgpu::Queue) {
@@ -78,9 +79,9 @@ impl framework::Example for Example {
 	) {
 		device.push_error_scope(wgpu::ErrorFilter::Validation);
 
-		let wind_cmds = self.path_pipelines.jitter.draw(device, &self.intermediate_bufs, &self.path_bufs);
+		let jitter_cmds = self.path_pipelines.jitter.draw(device, &self.intermediate_bufs, &self.path_bufs);
 		let rasterize_cmds = self.path_pipelines.rasterize.draw(device, &self.intermediate_bufs, view);
-		queue.submit(vec![wind_cmds, rasterize_cmds]);
+		queue.submit(vec![jitter_cmds, rasterize_cmds]);
 
 		spawner.spawn_local(ErrorFuture { inner: device.pop_error_scope() });
 	}
