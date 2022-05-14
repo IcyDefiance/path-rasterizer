@@ -33,21 +33,17 @@ fn fs_main(in: VertexOutput) -> [[location(0)]] vec4<f32> {
 	var value_l: vec2<f32> = textureLoad(intermediate, vec2<i32>(tex_coord1), 0).xy * 255.0;
 	var lower_l: vec2<f32> = value_l % 16.0;
 	var upper_l: vec2<f32> = (value_l - lower_l) / 16.0;
-	var alpha_l: vec2<f32> = (min(upper_l, vec2<f32>(1.0)) + min(lower_l, vec2<f32>(1.0))) / 2.0;
+	var alpha_l: vec2<f32> = (upper_l % 2.0 + lower_l % 2.0) / 2.0;
 
 	// Get samples for 0, +1/3, and +2/3
 	var tex_coord_r: vec2<f32> = in.tex_coord * intermediate_size;
 	var value_r: vec3<f32> = textureLoad(intermediate, vec2<i32>(tex_coord_r), 0).xyz * 255.0;
 	var lower_r: vec3<f32> = value_r % 16.0;
 	var upper_r: vec3<f32> = (value_r - lower_r) / 16.0;
-	var alpha_r: vec3<f32> = (min(upper_r, vec3<f32>(1.0)) + min(lower_r, vec3<f32>(1.0))) / 2.0;
+	var alpha_r: vec3<f32> = (upper_r % 2.0 + lower_r % 2.0) / 2.0;
 
 	// Average the energy over the pixels on either side
-	var rgb: vec3<f32> = vec3<f32>(
-		(alpha_l.y + alpha_l.x + alpha_r.z) / 3.0,
-		(alpha_l.x + alpha_r.z + alpha_r.y) / 3.0,
-		(alpha_r.z + alpha_r.y + alpha_r.x) / 3.0);
-	return vec4<f32>(rgb, 1.0);
+	return vec4<f32>(1.0, 1.0, 1.0, (alpha_l.x + alpha_r.z + alpha_r.y) / 3.0);
 
 	// return rgba;
 }

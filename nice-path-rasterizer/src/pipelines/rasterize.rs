@@ -75,14 +75,7 @@ impl RasterizePipeline {
 				entry_point: "fs_main",
 				targets: &[ColorTargetState {
 					format: view_format,
-					blend: Some(BlendState {
-						color: BlendComponent {
-							src_factor: BlendFactor::OneMinusDst,
-							dst_factor: BlendFactor::One,
-							operation: BlendOperation::Add,
-						},
-						alpha: BlendComponent::REPLACE,
-					}),
+					blend: Some(BlendState::ALPHA_BLENDING),
 					write_mask: ColorWrites::ALL,
 				}],
 			}),

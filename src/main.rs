@@ -44,7 +44,7 @@ impl framework::Example for Example {
 
 		let path = Path::start()
 			.move_to([100.0, 100.0])
-			.quadratic_curve_to([150.0, 50.0], [200.0, 100.0])
+			.quadratic_curve_to([150.0, 120.0], [200.0, 100.0])
 			.line_to([200.0, 200.0])
 			.line_to([155.0, 200.0])
 			.line_to([175.0, 125.0])
